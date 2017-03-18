@@ -21,6 +21,11 @@ public class TwitterListener implements StatusListener {
     @Value("${twitter.potus45}")
     private String potus45;
 
+    @NonNull
+    @Value("${version}")
+    private int version;
+
+
     @Autowired
     private TweetService tweetService;
 
@@ -37,7 +42,22 @@ public class TwitterListener implements StatusListener {
 
         if (potus45.equals(String.valueOf(user.getId()))) {
             log.info("All mighty POTUS tweeted: {}",status.getText());
-            tweetRepository.save(new Tweet(user.getId(),status.getId(),status.getText()));
+
+            Tweet tweet = new Tweet(user.getId(),status.getId(),status.getText(), version);
+
+            if(status.getURLEntities().length != 0) {
+                log.debug("Tweet contains URLs");
+                for (URLEntity x : status.getURLEntities()) {
+                    tweet.setUrl(x.getURL());
+                }
+            }
+            if (status.getMediaEntities().length != 0) {
+                log.debug("Tweet contains media");
+                for (MediaEntity x : status.getMediaEntities()) {
+                    tweet.setMedia(x.getMediaURL());
+                }
+            }
+            tweetRepository.save(tweet);
         }
     }
 

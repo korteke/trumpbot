@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by korteke on 18/03/2017.
@@ -33,14 +34,31 @@ public class Tweet {
     @Field("tweetText")
     public String tweetText;
 
+    @Getter
+    @Setter
+    @Field("version")
+    public int version;
+
+    @Getter
+    @Setter
+    @Field("url")
+    public String url;
+
+    @Getter
+    @Setter
+    @Field("media")
+    public String media;
+
+
     public Tweet() {
 
     }
 
-    public Tweet(Long userid, Long tweetId, String tweetText) {
+    public Tweet(Long userid, Long tweetId, String tweetText, int version) {
         this.tweetText = tweetText;
         this.userId = userid;
         this.tweetId = tweetId;
+        this.version = version;
     }
 
     @Override
