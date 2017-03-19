@@ -3,10 +3,8 @@ package net.kvak.service;
 import lombok.extern.slf4j.Slf4j;
 import net.kvak.model.Tweet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.twitter.api.TweetData;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
-import twitter4j.StatusUpdate;
 
 /**
  * Created by korteke on 18/03/2017.
