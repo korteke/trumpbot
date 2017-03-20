@@ -3,7 +3,7 @@
 
 My duty is to retweet all the rant/gibberish (so called "tweets") that all mighty POTUS deletes from his Twitter timeline.
 
-Includes[Pushover](https://pushover.net/) integration, because of course you want to know right away when BAD hombre deletes a tweet.
+Includes [Pushover](https://pushover.net/) integration, because of course you want to know right away when BAD hombre deletes a tweet.
 
 ## TODO
 
