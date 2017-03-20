@@ -1,7 +1,10 @@
-package net.kvak.model;
+package net.kvak.listener;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.kvak.configuration.PushoverConfiguration;
+import net.kvak.domain.Tweet;
+import net.kvak.messaging.PushoverMessageClient;
 import net.kvak.repository.TweetRepository;
 import net.kvak.service.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,6 @@ public class TwitterListener implements StatusListener {
     @Value("${twitter.potus45}")
     private String potus45;
 
-    @NonNull
     @Value("${version}")
     private int version;
 
@@ -31,6 +33,12 @@ public class TwitterListener implements StatusListener {
 
     @Autowired
     private TweetRepository tweetRepository;
+
+    @Autowired
+    private PushoverMessageClient pushoverMessageClient;
+
+    @Autowired
+    private PushoverConfiguration pushoverConfiguration;
 
     @Override
     public void onStatus(Status status) {
@@ -69,9 +77,18 @@ public class TwitterListener implements StatusListener {
         Tweet tweet = tweetRepository.findByTweetId(deleted);
         log.debug("Deleted text: {}",tweet.getTweetText());
 
-        if (tweet != null) {
-            log.debug("Retweet tweetId: {}",tweet.getTweetId());
-            tweetService.potusTweet(tweet);
+        log.debug("Retweet tweetId: {}",tweet.getTweetId());
+        tweetService.potusTweet(tweet);
+
+        log.debug("Pushover enabled: {}", pushoverConfiguration.getEnabled());
+        if (Boolean.valueOf(pushoverConfiguration.getEnabled())) {
+            if (tweet.getUrl() == null) {
+                log.debug("Messaging without url");
+                pushoverMessageClient.sendFakeMessage(tweet.getTweetText());
+            } else {
+                log.debug("Messaging with url");
+                pushoverMessageClient.sendFakeMessage(tweet.getTweetText(),tweet.getUrl());
+            }
         }
     }
 
@@ -93,6 +110,7 @@ public class TwitterListener implements StatusListener {
     @Override
     public void onException(Exception ex) {
 
+        log.error("VERY SAD!");
         ex.printStackTrace();
     }
 }

@@ -1,6 +1,6 @@
 package net.kvak.repository;
 
-import net.kvak.model.Tweet;
+import net.kvak.domain.Tweet;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**

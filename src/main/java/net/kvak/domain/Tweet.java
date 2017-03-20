@@ -1,4 +1,4 @@
-package net.kvak.model;
+package net.kvak.domain;
 
 import lombok.Getter;
 import lombok.Setter;

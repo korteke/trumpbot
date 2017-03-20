@@ -2,7 +2,7 @@ package net.kvak.configuration;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.kvak.model.TwitterListener;
+import net.kvak.listener.TwitterListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +42,8 @@ public class TwitterConfiguration {
 
         TwitterStreamFactory tf = new TwitterStreamFactory(createConfigurationBuilder().build());
         TwitterStream twitterStream = tf.getInstance();
+
+        log.debug("twitterStream");
         return twitterStream;
     }
 
@@ -60,12 +62,15 @@ public class TwitterConfiguration {
                 .setOAuthAccessTokenSecret(accessTokenSecret)
                 .setDebugEnabled(true);
 
+        log.debug("createConfigurationBuilder");
         return configurationBuilder;
     }
 
     @Bean
     public Twitter twitter() {
         TwitterTemplate twitterTemplate = new TwitterTemplate(consumerKey,consumerSecret,accessToken,accessTokenSecret);
+
+        log.debug("twitterTemplate");
         return twitterTemplate;
     }
 
