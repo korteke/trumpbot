@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Tweet {
 
     @Id
+    @Getter
     public String id;
 
     @Getter

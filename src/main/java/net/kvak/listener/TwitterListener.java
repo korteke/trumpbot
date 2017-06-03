@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import twitter4j.*;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 /**
  * Created by korteke on 18/03/2017.
@@ -47,6 +50,13 @@ public class TwitterListener implements StatusListener {
         log.debug("StatusId: {}",status.getId());
         log.debug("Text: {}",status.getText());
         log.debug("UserId: {}",status.getUser().getId());
+        if (status.getSource() != null) {
+            log.debug("Source: {}",status.getSource());
+        }
+        if (status.getGeoLocation() != null) {
+            log.debug("Location: {}",status.getGeoLocation());
+        }
+
 
         if (potus45.equals(String.valueOf(user.getId()))) {
             log.info("All mighty POTUS tweeted: {}",status.getText());
@@ -78,7 +88,15 @@ public class TwitterListener implements StatusListener {
         log.debug("Deleted text: {}",tweet.getTweetText());
 
         log.debug("Retweet tweetId: {}",tweet.getTweetId());
-        tweetService.potusTweet(tweet);
+        Long statusId = tweetService.potusTweet(tweet);
+
+        log.debug("Replying to tweet with details");
+        Date created = new ObjectId(tweet.getId()).getDate();
+        log.debug("Original tweet created: {}",created.toString());
+
+        tweetService.replyWithDetails(statusId,created);
+
+        log.debug("Reply sent to tweetId [{}] with details [{}]",statusId,created.toString());
 
         log.debug("Pushover enabled: {}", pushoverConfiguration.getEnabled());
         if (Boolean.valueOf(pushoverConfiguration.getEnabled())) {
